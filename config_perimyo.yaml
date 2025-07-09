@@ -1,0 +1,50 @@
+name: PeriMyo Tutorial
+
+datasets:
+  perimyo_data:
+    path: data/perimyo_combined.csv
+  # ops_mapping:
+  #   path: data/ops_mapping_file.csv
+  #   links:
+  #     movies:
+  #       column: movie
+  #       table-row: movies/Title
+  # icd_mapping:
+  #   path: data/icd_mapping_file.csv
+
+views:
+  perimyo_data:
+    dataset: perimyo_data
+    desc: |
+      Synthetic PeriMyo data set
+    render-table:
+      columns:
+        regex('lab_*'):
+          plot:
+            heatmap:
+              scale: linear
+              range: ["white", "blue"]
+        # regex('ICD_*|OPS_*'):
+        regex('OPS_*'):
+          plot:
+            heatmap:
+              type: nominal
+        regex('ICD_*|TROP|gender_female'):
+          spell:
+            url: v1.3.0/logic/boolean
+            with:
+              # specify which values should be interpreted as true or false
+              true_value: "True"
+              false_value: "False"
+        age_at_OP:
+          plot:
+            ticks:
+              scale: linear
+              color:
+                range:
+                  - "#fee8c8"
+                  - "#e34a33"
+
+
+
+

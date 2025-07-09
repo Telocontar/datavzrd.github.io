@@ -1,0 +1,13 @@
+# Jupyter NB Checkpoints
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# custom data
+data/perimyo*
+
+# datavzrd reports
+example-report/*
+perimyo-report/*
+
+
+

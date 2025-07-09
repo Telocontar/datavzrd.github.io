@@ -1,0 +1,15 @@
+tasks:
+    - name: Start web server
+      init: python -m http.server 8000
+    - name: Install required packages & Open Jupyter Notebook
+      init: pip install -r requirements.txt
+      command: gp open quickstart-demo.ipynb
+
+vscode:
+    extensions:
+        - ms-toolsai.jupyter
+        - ms-python.python
+
+ports:
+    - port: 8000
+      onOpen: open-preview

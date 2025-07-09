@@ -1,0 +1,139 @@
+name: Datavzrd Tutorial
+
+default-view: movies
+
+datasets:
+  movies:
+    path: data/movies.csv
+    links:
+      oscar:
+        column: Title
+        table-row: oscars/movie
+  oscars:
+    path: data/oscars.csv
+    links:
+      movies:
+        column: movie
+        table-row: movies/Title
+
+views:
+  movies:
+    dataset: movies
+    desc: |
+      Movies that won an **Oscar**
+    render-table:
+      columns:
+        Title:
+          link-to-url:
+            Wikipedia:
+              url: https://wikipedia.org/wiki/{value}
+              new-window: true
+            Letterboxd:
+              url: https://letterboxd.com/search/{value}
+              new-window: true
+        imdbID:
+          link-to-url:
+            IMDB:
+              url: https://www.imdb.com/title/{value}/
+              new-window: true
+        Rated:
+          plot:
+            heatmap:
+              scale: ordinal
+              color-scheme: category20
+        imdbRating:
+          plot:
+            bars:
+              scale: ordinal
+  oscars:
+    dataset: oscars
+    desc: |
+      *Oscar* awards
+    render-table:
+      columns:
+        name:
+          link-to-url:
+            IMDB:
+              url: https://www.imdb.com/find/?q={value}
+              new-window: true
+        award:
+          plot:
+            heatmap:
+              scale: ordinal
+              color-scheme: category20
+        age:
+          plot:
+            ticks:
+              scale: linear
+              color:
+                scale: linear
+                range:
+                  - "#fee8c8"
+                  - "#e34a33"
+        birth_d:
+          display-mode: hidden
+        birth_mo:
+          display-mode: hidden
+        birth_y:
+          display-mode: detail
+        overall_wins_and_overall_nominations:
+          custom-plot:
+            data: |
+              function (value, row) {
+                const [wins, nominations] = value.split("/")
+                return [
+                  {"category": "wins", "amount": wins},
+                  {"category": "nominations", "amount": nominations},
+                ]
+              }
+            spec: |
+              {
+                "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+                "height": 25,
+                "width": 25,
+                "mark": {"type": "arc", "tooltip": true},
+                "encoding": {
+                  "theta": {"field": "amount", "type": "quantitative"},
+                  "color": {"field": "category", "type": "nominal"}
+                },
+                "config": {
+                  "legend": {"disable": true}
+                }
+              }
+      add-columns:
+        birth_season:
+          value: |
+            function(row) {
+              const month = row['birth_mo']
+              if (month >= 3 && month < 6) {
+                return 'spring';
+              } else if (month >= 6 && month < 9) {
+                return 'summer';
+              } else if (month >= 9 && month < 11) {
+                return 'autumn';
+              } else {
+                return 'winter';
+              }
+            }
+        total_wins:
+          value: |
+            function(row) {
+              const [wins, nominations] = row['overall_wins_and_overall_nominations'].split("/")
+              return wins;
+            }
+  year_vs_age:
+    dataset: oscars
+    desc: |
+      year of Oscar award vs. age of the actress/actor.
+    render-plot:
+      spec: |
+        {
+          "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+          "mark": {"type": "circle", "tooltip": true},
+          "encoding": {
+            "x": {"field": "oscar_yr", "type": "temporal"},
+            "y": {"field": "age", "type": "quantitative"},
+            "color": {"field": "award", "type": "nominal"}
+          }
+        }
+  
