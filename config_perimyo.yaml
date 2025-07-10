@@ -3,14 +3,7 @@ name: PeriMyo Tutorial
 datasets:
   perimyo_data:
     path: data/perimyo_combined.csv
-  # ops_mapping:
-  #   path: data/ops_mapping_file.csv
-  #   links:
-  #     movies:
-  #       column: movie
-  #       table-row: movies/Title
-  # icd_mapping:
-  #   path: data/icd_mapping_file.csv
+
 
 views:
   perimyo_data:
@@ -44,6 +37,44 @@ views:
                 range:
                   - "#fee8c8"
                   - "#e34a33"
+        condition_main:
+          # link-to-url:
+          #   ICD-10:
+          #     url: https://gesund.bund.de/en/icd-code-search/{value}
+          #     new-window: true
+          custom-plot:
+            data: |
+              function (value, row) {
+                return [
+                  {
+                    "category": value.charAt(0)
+                  }
+                ]
+              }
+            spec: |
+              {
+                "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+                "height": 25,
+                "width": 25,
+                "mark": {"type": "rect", "tooltip": true},
+                "encoding": {
+                  "y": {"field": "category", "type": "nominal"},
+                  "color": {
+                    "field": "category",
+                    "type": "nominal",
+                    "scale": {"scheme": "category20"}
+                  }
+                },
+                "config": {
+                  "legend": {"disable": true}
+                }
+              }
+      add-columns:
+        condition_main_processed:
+          value: |
+            function (row) {
+              return row['condition_main'].charAt(0)
+            }
 
 
 
