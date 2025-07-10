@@ -1,3 +1,5 @@
+# Datavzrd
+
 Links:
  * [datavzrd](https://github.com/datavzrd/datavzrd)
  * [Tutorial](https://github.com/datavzrd/datavzrd.github.io)
@@ -14,3 +16,15 @@ for the provided data or
 datavzrd config_perimyo.yaml --output perimyo-report --overwrite-output
 ```
 for the synthetic data.
+
+Create suggestions using
+```bash
+datavzrd suggest -f data/perimyo_combined.csv -s $',' > perimyo_datavzrd_suggestion.yaml
+```
+
+# Gitpod
+Run Jupyter notebook:
+```
+jupyter notebook --no-browser --port=8888 --ip=0.0.0.0 --NotebookApp.token=''
+```
+

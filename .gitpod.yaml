@@ -16,6 +16,7 @@ tasks:
         micromamba create -n datavzrd -c conda-forge datavzrd --yes &> /tmp/log-setup-datavzrd.txt
         echo "micromamba activate datavzrd" >> ~/.bashrc
         micromamba activate datavzrd
+        micromamba install pandas notebook
         echo "done, ready to go!"
 
 vscode:
